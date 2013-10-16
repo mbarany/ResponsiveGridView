@@ -25,17 +25,17 @@ if (!Barany.View) {
  * <= 1000px wide ==> 3 Columns
  * > 1000px wide ==> 4 Columns
  */
-Barany.View.Grid = {
-    $: null,
-    $container: null,
-    contentCallback: null,
-    drawnCols: null,
-    rules: [
+Barany.View.Grid = function() {
+    this.$ = null;
+    this.$container = null;
+    this.contentCallback = null;
+    this.drawnCols = null;
+    this.rules = [
         450,
         800,
         1000
-    ],
-    width: this.$(window).width(),
+    ];
+    this.width = null;
 
     /**
      * @param  {jQuery Object} $container
@@ -45,7 +45,7 @@ Barany.View.Grid = {
      *     jQueryReference: $ //In case you're not using $ for jQuery
      * }
      */
-    init: function($container, getContentCallback, optionalOptions) {
+    this.init = function($container, getContentCallback, optionalOptions) {
         if (!$container || !getContentCallback) {
             throw "Invalid Container or Content Callback!";
         }
@@ -54,10 +54,11 @@ Barany.View.Grid = {
 
         this.setOptionalOptions(optionalOptions);
         this.setupOnResize();
+        this.width = this.$(window).width();
 
         this.buildContent(this.determineNumberOfCols());
-    },
-    setOptionalOptions: function(optionalOptions) {
+    };
+    this.setOptionalOptions = function(optionalOptions) {
         optionalOptions = optionalOptions || {};
         if (optionalOptions.widthRules) {
             if (optionalOptions.widthRules.length > 11) {
@@ -66,8 +67,8 @@ Barany.View.Grid = {
             this.rules = optionalOptions.widthRules;
         }
         this.$ = optionalOptions.jQueryReference || $;
-    },
-    setupOnResize: function() {
+    };
+    this.setupOnResize = function() {
         var self = this;
         this.$(window).resize(function() {
             self.width = self.$(window).width();
@@ -76,8 +77,8 @@ Barany.View.Grid = {
                 self.buildContent(newCols);
             }
         });
-    },
-    determineNumberOfCols: function() {
+    };
+    this.determineNumberOfCols = function() {
         var cols = 1;
         for (var i in this.rules) {
             if (this.width <= this.rules[i]) {
@@ -86,8 +87,8 @@ Barany.View.Grid = {
             cols++;
         }
         return cols;
-    },
-    buildContent: function(cols) {
+    };
+    this.buildContent = function(cols) {
         this.drawnCols = cols;
 
         var html = '<div class="group">',
@@ -101,5 +102,5 @@ Barany.View.Grid = {
         html += '</div>';
 
         this.$container.html(html);
-    }
+    };
 };
